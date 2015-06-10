@@ -24,10 +24,10 @@ Enemy.prototype.update = function(dt) {
     // which will ensure the game runs at the same speed for
     // all computers.
 
-    if (this.x >= 505){
+    if (this.x >= 505) {
         this.x = -50 ;
         this.y = this.street[Math.floor(Math.random()*3)];
-    }else{
+    } else {
         this.x += this.speed * dt;
     }
 
@@ -56,6 +56,7 @@ var Player = function() {
     this.lives = 5;
     this.points = 0;
 }
+
 Player.prototype.update = function() {
     // Collision check: calculate the distance between the centers of
     // the Enemy and Player
@@ -69,20 +70,16 @@ Player.prototype.update = function() {
     if ((dist1 < 80) || (dist2 < 80) || (dist3 < 80)) {         // Check for the distance
         this.x = 210;
         this.y = 460;
-        if(this.lives <= 1) {                                   // No more lives
-            score.messageLives = score.messageOver;
-            this.lives = "";
-        }else {
-            this.lives = this.lives - 1;
-        }
-    }else if (this.y < 50) {                                    // Player reached water
+        this.lives = this.lives - 1;
+
+    } else if (this.y < 50) {                                    // Player reached water
         this.points = this.points + 10;
         this.x = 210;
         this.y = 460;
-    }else {                                                      // Keeping player inside the canvas
+    } else {                                                      // Keeping player inside the canvas
         if (this.x < 0) {
            this.x = 8;
-        }else if (this.x > 505) {
+        } else if (this.x > 505) {
             this.x = 412;
             this.y;
         }
@@ -93,14 +90,14 @@ Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 }
 
-Player.prototype.handleInput = function(i){
+Player.prototype.handleInput = function(i) {
     if (i == "up") {
         this.y -= 83;
-    }else if (i == "left") {
+    } else if (i == "left") {
         this.x -= 101;
-    }else if (i == "right") {
+    } else if (i == "right") {
         this.x += 101;
-    }else if (i == "down") {
+    } else if (i == "down") {
         this.y += 83;
     }
 }
@@ -116,7 +113,7 @@ document.addEventListener('keyup', function(e) {
     };
 
     player.handleInput(allowedKeys[e.keyCode]);
-});
+})
 
 /**
  **
@@ -128,15 +125,15 @@ var Score = function() {
     this.sprite = 'images/Star.png';
     this.messageLives = "Lives left : ";
     this.messagePoints = "Points : ";
-    this.messageOver = "Game is Over!!";
 }
 
 Score.prototype.render = function() {
-    ctx.fillStyle="black";
+    ctx.fillStyle="#000000";
     ctx.fillRect(0,0,505,50);
 
-    ctx.font="20px Georgia";
-    ctx.fillStyle="white";
+    ctx.font = "20px Georgia";
+    ctx.fillStyle = "white";
+    ctx.textAlign = "left";
     ctx.fillText(this.messageLives  + player.lives ,10,25);
     ctx.fillText(this.messagePoints + player.points ,10,45);
     if (player.points > 60) {
