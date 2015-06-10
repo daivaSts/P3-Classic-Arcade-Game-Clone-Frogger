@@ -197,8 +197,6 @@ var Engine = (function(global) {
      * from within their app.js files.
      */
     global.ctx = ctx;
-    window.testas = function(){
-   score.messageLives = 'dadadadadad  ';
 }
 })(this);
 
