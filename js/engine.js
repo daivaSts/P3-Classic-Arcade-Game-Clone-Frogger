@@ -33,6 +33,9 @@ var Engine = (function(global) {
      * and handles properly calling the update and render methods.
      */
     function main() {
+        if (player.lives === 0) {
+            reset();
+        } else {
         /* Get our time delta information which is required if your game
          * requires smooth animation. Because everyone's computer processes
          * instructions at different speeds we need a constant value that
@@ -57,6 +60,7 @@ var Engine = (function(global) {
          * function again as soon as the browser is able to draw another frame.
          */
         win.requestAnimationFrame(main);
+        }
     };
 
     /* This function does some initial setup that should only occur once,
@@ -164,6 +168,13 @@ var Engine = (function(global) {
      */
     function reset() {
         // noop
+        ctx.fillStyle = "#000080";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.font = "20px Georgia";
+        ctx.textAlign = "center";
+        ctx.fillStyle = "white";
+        ctx.fillText("GAME OVER! GOODBYE!", canvas.width/2, canvas.height/2);
+
     }
 
     /* Go ahead and load all of the images we know we're going to need to
@@ -186,11 +197,9 @@ var Engine = (function(global) {
      * from within their app.js files.
      */
     global.ctx = ctx;
+    window.testas = function(){
+   score.messageLives = 'dadadadadad  ';
+}
 })(this);
 
-document.addEventListener('keyup', function(e) {
-    var allowedKeys = {
-        32: 'spacebar',
-    }
 
-});
