@@ -95,10 +95,11 @@ var Engine = (function(global) {
             enemy.update(dt);
         });
         player.update();
-        shape.update();
+
     }
 
-    /* This function initially draws the "game level", it will then call
+    /* This function initially draws the "game
+    level", it will then call
      * the renderEntities function. Remember, this function is called every
      * game tick (or loop of the game engine) because that's how games work -
      * they are flipbooks creating the illusion of animation but in reality
@@ -154,7 +155,7 @@ var Engine = (function(global) {
         });
 
         player.render();
-        shape.render();
+        score.render();
     }
 
     /* This function does nothing but it could have been a good place to
@@ -174,8 +175,10 @@ var Engine = (function(global) {
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug-sq.png',
-        'images/char-boy-sq.png'
+        'images/char-boy-sq.png',
+        'images/Star.png',
     ]);
+
     Resources.onReady(init);
 
     /* Assign the canvas' context object to the global variable (the window
@@ -184,3 +187,10 @@ var Engine = (function(global) {
      */
     global.ctx = ctx;
 })(this);
+
+document.addEventListener('keyup', function(e) {
+    var allowedKeys = {
+        32: 'spacebar',
+    }
+
+});
