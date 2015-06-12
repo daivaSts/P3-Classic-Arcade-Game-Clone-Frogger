@@ -1,31 +1,33 @@
-/**
- **
- **  Enemies our player must avoid
- **
- **/
+/*
+ *
+ *  Enemies our player must avoid
+ *
+ */
 var Enemy = function() {
-    // Variables applied to each of our instances go here,
-    // we've provided one for you to get started
-
-    // The image/sprite for our enemies, this uses
-    // a helper we've provided to easily load images
+    /* Variables applied to each of our instances go here,
+     * we've provided one for you to get started.
+     * The image/sprite for our enemies, this uses
+     * a helper we've provided to easily load images
+     */
     this.street = [120,205,290];
     this.sprite = 'images/enemy-bug-sq.png';
     this.x = -50;
     // Enemy picks a random path and speed
     this.y = this.street[Math.floor(Math.random()*3)];
     this.speed = Math.random()*(180-40) + 40;
-}
+};
 
-// Enemy's position
-// Parameter: dt, a time delta between ticks
+/* Enemy's position
+ * Parameter: dt, a time delta between ticks
+ */
 Enemy.prototype.update = function(dt) {
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
+    /* You should multiply any movement by the dt parameter
+     * which will ensure the game runs at the same speed for
+     * all computers.
+     */
 
     if (this.x >= 505) {
-        this.x = -50 ;
+        this.x = -50;
         this.y = this.street[Math.floor(Math.random()*3)];
     } else {
         this.x += this.speed * dt;
@@ -35,31 +37,31 @@ Enemy.prototype.update = function(dt) {
         this.speed = Math.random()*(220-60) + 60;
     }
     // Calculate a center of the Enemy image:
+
     this.ctrx = this.x + 50;
     this.ctry = this.y + 50;
-}
+};
 
-// Draw the enemy on the screen
+/* Draw the enemy on the screen
+ */
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-}
+};
 
-/**
- **
- ** Player class
- **
- **/
+/* Player class
+ */
 var Player = function() {
     this.sprite = 'images/char-boy-sq.png';
     this.x = 210;
     this.y = 460;
     this.lives = 5;
     this.points = 0;
-}
+};
 
 Player.prototype.update = function() {
-    // Collision check: calculate the distance between the centers of
-    // the Enemy and Player
+    /* Collision check: calculate the distance between the centers of
+     * the Enemy and Player
+     */
     this.ctrx = this.x + 43;
     this.ctry = this.y + 43;
 
@@ -71,6 +73,10 @@ Player.prototype.update = function() {
         this.x = 210;
         this.y = 460;
         this.lives = this.lives - 1;
+        if (player.lives == 0) {
+            game.gameEnd = true;
+            game.gameRun = false;
+        }
 
     } else if (this.y < 50) {                                    // Player reached water
         this.points = this.points + 10;
@@ -84,11 +90,12 @@ Player.prototype.update = function() {
             this.y;
         }
     }
-  }
+  };
 
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-}
+};
+
 
 Player.prototype.handleInput = function(i) {
     if (i == "up") {
@@ -100,10 +107,11 @@ Player.prototype.handleInput = function(i) {
     } else if (i == "down") {
         this.y += 83;
     }
-}
+};
 
-// This listens for key presses and sends the keys to your
-// Player.handleInput() method.
+/* This listens for key presses and sends the keys to your
+ * Player.handleInput() method.
+ */
 document.addEventListener('keyup', function(e) {
     var allowedKeys = {
         37: 'left',
@@ -111,21 +119,16 @@ document.addEventListener('keyup', function(e) {
         39: 'right',
         40: 'down'
     };
-
     player.handleInput(allowedKeys[e.keyCode]);
-})
+});
 
-/**
- **
- ** Scoreboard /information/ messages
- **
- **/
-
+/* Scoreboard /information/ messages
+ */
 var Score = function() {
     this.sprite = 'images/Star.png';
     this.messageLives = "Lives left : ";
     this.messagePoints = "Points : ";
-}
+};
 
 Score.prototype.render = function() {
     ctx.fillStyle="#000000";
@@ -136,20 +139,69 @@ Score.prototype.render = function() {
     ctx.textAlign = "left";
     ctx.fillText(this.messageLives  + player.lives ,10,25);
     ctx.fillText(this.messagePoints + player.points ,10,45);
-    if (player.points > 60) {
+    if (player.points >= 60) {
         ctx.drawImage(Resources.get(this.sprite), 400, -50);
     }
-}
+};
 
-/**
- **
- ** Instantiating objects.
- **
-**/
-
+/* Instantiating objects.
+ */
 var bug1 = new Enemy();
 var bug2 = new Enemy();
 var bug3 = new Enemy();
 var player = new Player();
 var score = new Score();
 var allEnemies = [bug1,bug2,bug3];
+
+
+/* Game state object
+ */
+var game = {
+    gameStart: true,
+    gameRun: false,
+    gameEnd: false
+}
+
+/* This function handles game reset state after the game has ended.
+ * It's called by the render() method.
+ */
+function reset() {
+    ctx.fillStyle = "#000080";
+    ctx.fillRect(0, 0, 505, 606);
+    ctx.font = "30px Georgia";
+    ctx.textAlign = "center";
+    ctx.fillStyle = "white";
+    ctx.fillText("GAME OVER!", 252, 300);
+    ctx.font = "20px Georgia";
+    ctx.fillText("CLICK TO START THE GAME", 252, 400);
+    player.lives = 5;
+    player.points = 0;
+    player.x = 210;
+    player.y = 460;
+}
+
+/* This function handles game start state
+ * It's called by the render() method.
+ */
+function start() {
+    ctx.fillStyle = "#000080";
+    ctx.fillRect(0, 0, 505, 606);
+    ctx.font = "30px Georgia";
+    ctx.textAlign = "center";
+    ctx.fillStyle = "white";
+    ctx.fillText("WELCOME TO FROGGER!", 252, 300);
+    ctx.font = "20px Georgia";
+    ctx.fillText("CLICK TO START THE GAME", 252, 400);
+}
+
+/* This function is called by mouse click event listener getElementsByTagName("canvas")[0]
+ */
+function status() {
+    if (game.gameStart === true) {
+        game.gameStart = false;
+        game.gameRun = true;
+    } else if (game.gameEnd === true) {
+        game.gameEnd = false;
+        game.gameRun = true;
+    }
+}
