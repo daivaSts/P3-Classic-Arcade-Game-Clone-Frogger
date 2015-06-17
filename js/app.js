@@ -156,7 +156,7 @@ var allEnemies = [];
 
 for (var i = 0; i < 3; i += 1) {
     allEnemies.push(new Enemy());
-};
+}
 
 /* This function draws game start/end screens
  * It's called by the start() and reset() methods.
