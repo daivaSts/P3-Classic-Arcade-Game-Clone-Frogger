@@ -28,6 +28,7 @@ var Engine = (function(global) {
     canvas.width = 505;
     canvas.height = 606;
     doc.body.appendChild(canvas);
+    canvas.setAttribute("id", "myCanvas");
 
     /* This function serves as the kickoff point for the game loop itself
      * and handles properly calling the update and render methods.
@@ -66,6 +67,10 @@ var Engine = (function(global) {
     function init() {
         lastTime = Date.now();
         main();
+
+        /* FSM calls the initial state transition event
+         */
+        fsm.startup();
     }
 
     /* This function is called by main (our game loop) and itself calls all
@@ -103,13 +108,16 @@ var Engine = (function(global) {
      * they are just drawing the entire screen over and over.
      */
     function render() {
-        /*This checks the game status
+        /*This switch statement perform action based on the FSM game status
          */
-        if (game.gameStart) {
-            start();
-        } else if (game.gameEnd) {
-            reset();
-        } else {
+        switch(fsm.current){
+            case "welcome":
+                start();
+                break;
+            case "theEnd":
+                reset();
+                break;
+            case 'playing':
 
             /* This array holds the relative URL to the image used
              * for that particular row of the game level.
@@ -184,10 +192,10 @@ var Engine = (function(global) {
     global.ctx = ctx;
 
     /* Mouse click event listener is assigned to a canvas element,
-     * calls staus() function, which at the game start or game
-     * end changes game status.
+     * calls FSM toPlay() function, which changes the game status from 'welcome' to 'playing'.
      */
-    document.getElementsByTagName("canvas")[0].addEventListener('click', status);
+    document.addEventListener('keydown', startGame, false);
+
 })(this);
 
 
